@@ -1,0 +1,12 @@
+
+/generated/prisma
+node_modules/
+dist/
+.env
+.env.*
+!.env.example
+
+coverage/
+
+.prisma/
+.DS_Store
