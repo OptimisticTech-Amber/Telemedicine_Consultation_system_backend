@@ -479,6 +479,246 @@ Never commit real credentials or secrets to Git.
 
 ---
 
-# 🐳 Running with Docker
+🐳 Running with Docker
 
-Start t
+Start the application and PostgreSQL using Docker Compose:
+
+docker compose up --build
+
+To run in detached mode:
+
+docker compose up -d --build
+
+Stop the containers:
+
+docker compose down
+🗃️ Database Setup
+
+Generate Prisma Client:
+
+npx prisma generate
+
+Run migrations:
+
+npx prisma migrate dev
+
+For production:
+
+npx prisma migrate deploy
+
+Open Prisma Studio:
+
+npx prisma studio
+▶️ Running the Application
+Development
+npm run dev
+Production Build
+npm run build
+Start Production Server
+npm start
+
+The API will normally be available at:
+
+http://localhost:3000
+📖 API Documentation
+
+Open the Swagger/OpenAPI documentation:
+
+http://localhost:3000/api/docs
+
+The documentation can be used to:
+
+Explore endpoints
+View request/response schemas
+Understand authentication requirements
+Test API endpoints
+🧪 Testing
+
+The project uses Jest and Supertest for automated testing.
+
+Run the test suite:
+
+npm test
+
+Run tests in watch mode:
+
+npm run test:watch
+
+Run coverage:
+
+npm run test:coverage
+
+Testing covers important application behavior including:
+
+Authentication
+Authorization
+Doctor management
+Availability
+Consultation booking
+Consultation lifecycle
+Prescription access
+Payment-related logic
+Validation
+Error handling
+🔒 Security Considerations
+
+The application follows several security practices:
+
+Authentication
+
+JWT tokens are validated through authentication middleware.
+
+Authorization
+
+Protected resources use role-based authorization:
+
+PATIENT
+DOCTOR
+ADMIN
+Input Validation
+
+API inputs are validated before reaching business logic.
+
+Rate Limiting
+
+Rate limiting is applied to protect APIs from excessive requests.
+
+Payment Security
+
+Razorpay signatures and webhook HMAC signatures are verified before processing payment events.
+
+Audit Logging
+
+Important actions are recorded using audit logs to provide traceability.
+
+Database Safety
+
+Prisma and PostgreSQL transactions are used for operations that require consistency, particularly consultation booking.
+
+📈 Scalability
+
+The application is designed with a target of approximately:
+
+100,000 daily consultations
+
+with performance goals around:
+
+Read latency:  < 200 ms p95
+Write latency: < 500 ms p95
+Availability:   99.95%
+
+The modular architecture allows individual domains to evolve independently while maintaining a single deployable backend.
+
+Database indexes, transactions, efficient queries, connection management, and observability are important parts of the scalability strategy.
+
+🔍 Observability
+
+The backend supports production-oriented monitoring through:
+
+Pino
+
+Structured application logs.
+
+Prometheus
+
+Application and HTTP metrics.
+
+OpenTelemetry
+
+Instrumentation and distributed tracing.
+
+Jaeger
+
+Visualization and investigation of traces.
+
+Example observability flow:
+
+Application
+    │
+    ├── Logs ───────────► Pino
+    │
+    ├── Metrics ────────► Prometheus
+    │
+    └── Traces ─────────► OpenTelemetry
+                              │
+                              ▼
+                           Jaeger
+🧩 Design Principles
+
+The project follows several backend engineering principles:
+
+Modular architecture
+Separation of concerns
+Type safety
+Centralized error handling
+Role-based authorization
+Transactional database operations
+Input validation
+Secure authentication
+API documentation
+Automated testing
+Structured logging
+Observability
+Database integrity
+🎯 Key Engineering Challenges
+Preventing Double Booking
+
+Multiple users can attempt to book the same availability slot at nearly the same time.
+
+The solution uses transactional database operations and locking to ensure that a slot cannot be successfully booked twice.
+
+Payment Verification
+
+Payment status cannot be trusted solely from client-side information.
+
+The backend verifies Razorpay signatures and webhook signatures before accepting payment-related events.
+
+Authentication & Sessions
+
+The system separates short-lived access authentication from refresh/session management to provide a more secure authentication flow.
+
+Role-Based Access
+
+Patients, doctors, and administrators have different permissions. Authorization is enforced at the API/business-logic level rather than relying only on frontend restrictions.
+
+📌 Future Improvements
+
+Potential areas for future development include:
+
+Video consultation integration
+Advanced doctor search and filtering
+Appointment reminders
+Medical document management
+Prescription PDF generation
+Advanced analytics dashboards
+Horizontal API scaling
+More comprehensive integration and end-to-end testing
+👨‍💻 Development
+
+This project follows a modular development approach where each major business domain is isolated into its own module.
+
+Example:
+
+modules/
+├── auth/
+├── users/
+├── doctors/
+├── consultations/
+├── prescriptions/
+├── payments/
+└── audit/
+
+Each module can contain its own:
+
+controller
+service
+repository
+routes
+validation
+types
+
+This keeps business logic organized and makes the codebase easier to maintain as the application grows.
+
+📄 License
+
+This project is developed as a software engineering/telemedicine system project.
